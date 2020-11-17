@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using System.IO;
 
 namespace Lab2_service
 {
@@ -13,8 +6,10 @@ namespace Lab2_service
     {
         protected override string GetProperty(string name)
         {
-            JsonElement root = JsonDocument.Parse(documentText).RootElement;
-            return root.GetProperty(name).GetRawText().Trim('"');
+            JsonElement root = JsonDocument.Parse(documentText).RootElement; //Получим корневой элемент json документа
+            string property = root.GetProperty(name).GetRawText().Trim('"'); //Найдем свойство по имени в формате строки
+                                                                             //В случае ненайденного свойства будет вызвана исключительная ситуация
+            return property;                                                 //Вернем свойство
         }
     }
 }
