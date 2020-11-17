@@ -25,7 +25,7 @@ namespace Lab2_service
             {
                 this.options = options;
                 logger = new Logger();
-                watcher = new FileSystemWatcher(this.options.PathOptions.SourcePath);
+                watcher = new FileSystemWatcher(this.options.PathOptions.SourcePath); //Определение пути к папке Source
                 watcher.Created += Watcher_Created;
                 watcher.Deleted += Watcher_Deleted;
                 watcher.Changed += Watcher_Changed;
@@ -75,16 +75,19 @@ namespace Lab2_service
                 if (Path.GetExtension(e.FullPath) == ".txt")
                 {
                     FileInfo file = new FileInfo(e.FullPath);
+                    //Определение пути к папке Target
                     string targetFile = Path.Combine(options.PathOptions.TargetPath, options.PathOptions.ClientDirectoryName, string.Format("{0:yyyy}\\{0:MM}\\{0:dd}", file.CreationTime));
                     if (!Directory.Exists(targetFile))
                     {
                         Directory.CreateDirectory(targetFile);
                     }
+                    //Определение имени файла
                     targetFile = Path.Combine(targetFile, string.Format(options.PathOptions.FileName + "_{0:yyyy}_{0:MM}_{0:dd}_{0:HH}_{0:mm}_{0:ss}.txt", file.CreationTime));
                     EncryptFile(e.FullPath, targetFile);
                     string newSource = Path.ChangeExtension(targetFile, ".gz");
                     CompressFile(targetFile, newSource);
                     File.Delete(targetFile);
+                    //Определение имени архива
                     string finalTarget = Path.Combine(Path.GetDirectoryName(targetFile), options.PathOptions.ArchiveName);
                     if (!Directory.Exists(finalTarget))
                     {
@@ -133,7 +136,7 @@ namespace Lab2_service
         private void CompressFile(string sourcePath, string targetPath)
         {
             CompressionLevel level;
-            switch (options.ArchiveOptions.CompressionLevel)
+            switch (options.ArchiveOptions.CompressionLevel)    //Определение уровня сжатия
             {
                 case "Fastest":
                     level = CompressionLevel.Fastest;
