@@ -21,14 +21,15 @@ namespace Lab2_service
         public FileWatcher()
         {
             InitializeComponent();
-            optionsManager = new OptionsManager(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json"));
-            options = new Options
+            optionsManager = new OptionsManager(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json")); //Создаем объект OptionsManager и передаем ему                                                                                                  
+                                                                                                                    //путь на файл конфигурации
+            options = new Options       //Создаем объект Options и присваиваем его полям модели настроек через метод GetOptions                                                                               
             {
                 ArchiveOptions = optionsManager.GetOptions<ArchiveOptions>(),
                 PathOptions = optionsManager.GetOptions<PathOptions>(),
                 ServiceOptions = optionsManager.GetOptions<ServiceOptions>()
             };
-            CanStop = options.ServiceOptions.CanStop;
+            CanStop = options.ServiceOptions.CanStop;                           //Используем настройки
             CanPauseAndContinue = options.ServiceOptions.CanPauseAndContinue;
             AutoLog = options.ServiceOptions.AutoLog;
         }
