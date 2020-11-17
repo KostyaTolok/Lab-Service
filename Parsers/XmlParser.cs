@@ -11,8 +11,8 @@ namespace Lab2_service
     {
         protected override string GetProperty(string name)
         {
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.Schemas.Add(null, @"C:\services\configValidation.xsd");
+            XmlReaderSettings settings = new XmlReaderSettings();                   //Создадим объект настроек XmlReader
+            settings.Schemas.Add(null, @"C:\services\configValidation.xsd");        
             settings.ValidationType = ValidationType.Schema;
             settings.ValidationEventHandler += SettingsValidationEventHandler;
             using (XmlReader reader = XmlReader.Create(path))
