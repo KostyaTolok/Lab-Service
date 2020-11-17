@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,8 @@ namespace Lab2_service
     {
         protected override string GetProperty(string name)
         {
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.Schemas.Add(null, @"C:\services\configValidation.xsd");
+            XmlReaderSettings settings = new XmlReaderSettings();              //Создадим объект настроек XmlReader
+            settings.Schemas.Add(null, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configValidation.xsd"));
             settings.ValidationType = ValidationType.Schema;
             settings.ValidationEventHandler += SettingsValidationEventHandler;
             using (XmlReader reader = XmlReader.Create(path))
