@@ -19,41 +19,42 @@ namespace Lab2_service
         public TOptions ReadOptions<TOptions>(string path) where TOptions : class, new()
         {
             this.path = path;
-            TOptions optionsObject = new TOptions();
-            documentText = ReadDocument();
-            optionsObject = SetProperties(optionsObject);
-            return optionsObject;
+            TOptions optionsObject = new TOptions();            //Создадим объект настроек
+            documentText = ReadDocument();                      //Считаем текст из файла настроек для последующего использования в парсере
+            optionsObject = SetProperties(optionsObject);       //Установим свойства объекту настроек
+            return optionsObject;                               //Вернем объект настроек
         }
 
         private TOptions SetProperties<TOptions>(TOptions optionsObject) where TOptions : class, new()
         {
-            Type optionsObjectType = optionsObject.GetType();
-            foreach (PropertyInfo property in optionsObjectType.GetProperties())
+            Type optionsObjectType = optionsObject.GetType();                       //Получим тип объекта настроек
+            foreach (PropertyInfo property in optionsObjectType.GetProperties())    
             {
                 try
                 {
-                    string attributeName = property.GetCustomAttribute<NameAttribute>(true).Name;
-                    string sourceProperty = GetProperty(attributeName);
-                    var newProperty = ConvertToProperty(sourceProperty, property.PropertyType);
-                    property.SetValue(optionsObject, newProperty);
+                    string attributeName = property.GetCustomAttribute<NameAttribute>(true).Name;   //Получим имя свойства по которому будем выполнять поиск в файле настроек
+                    string sourceProperty = GetProperty(attributeName);                             //Получим значение свойства в формате строки
+                    var newProperty = ConvertToProperty(sourceProperty, property.PropertyType);     //Переведем в формат исходного свойства
                     List<ValidationResult> results = new List<ValidationResult>();
                     ValidationContext context = new ValidationContext(optionsObject) { MemberName = property.Name };
-                    if (!Validator.TryValidateProperty(newProperty, context, results))
+                    if (!Validator.TryValidateProperty(newProperty, context, results))              //Проверим значение свойства на соответсвие заданным атрибутам
                     {
                         foreach (ValidationResult error in results)
                         {
                             throw new Exception(error.ErrorMessage);
                         }
                     }
+                    property.SetValue(optionsObject, newProperty);      //Установим значение исходному свойству
                 }
                 catch (Exception ex)
                 {
+                    //В случае возникновения исключительной ситуации запишем ее в лог и установим стандартное значение свойству
                     logger.RecordException(ex.Message);
                     DefaultValueAttribute defAttribute = property.GetCustomAttribute<DefaultValueAttribute>(true);
                     property.SetValue(optionsObject, defAttribute.Value);
                 }
             }
-            return optionsObject;
+            return optionsObject;          //Вернем объект настроек с установленными свойствами
         }
 
         private object ConvertToProperty(string property, Type type)
