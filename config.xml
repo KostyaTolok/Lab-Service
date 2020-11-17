@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<options>
+  <ArchiveOptions>
+    <CompressionLevel>Fastest</CompressionLevel>
+  </ArchiveOptions>
+  <PathOptions>
+    <ClientDirectoryName>Client</ClientDirectoryName>
+    <FileName>Purchases</FileName>
+    <ArchiveName>PikaPika</ArchiveName>
+    <SourcePath>C:\SourceDirectory</SourcePath>
+    <TargetPath>C:\TargetDirectory</TargetPath>
+  </PathOptions>
+  <ServiceOptions>
+    <CanStop>true</CanStop>
+    <CanPauseAndContinue>true</CanPauseAndContinue>
+    <AutoLog>true</AutoLog>
+  </ServiceOptions>
+</options>
