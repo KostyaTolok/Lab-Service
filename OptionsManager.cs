@@ -15,7 +15,7 @@ namespace Lab2_service
         public OptionsManager(string configPath)
         {
             this.configPath = configPath;
-            if (Path.GetExtension(configPath) == ".xml")
+            if (Path.GetExtension(configPath) == ".xml")        //Определим парсер на основе переданного пути
             {
                 parser = new XmlParser();
             }
@@ -27,7 +27,7 @@ namespace Lab2_service
 
         public TOptions GetOptions<TOptions>() where TOptions : class, new()
         {
-            TOptions options = parser.ReadOptions<TOptions>(configPath);
+            TOptions options = parser.ReadOptions<TOptions>(configPath);          //Получим модель настроек из парсера и вернем ее
             return options;
         }
 
