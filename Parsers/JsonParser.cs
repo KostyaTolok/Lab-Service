@@ -14,7 +14,8 @@ namespace Lab2_service
         protected override string GetProperty(string name)
         {
             JsonElement root = JsonDocument.Parse(documentText).RootElement;
-            return root.GetProperty(name).GetRawText().Trim('"');
+            string property = root.GetProperty(name).GetRawText().Trim('"');
+            return property;
         }
     }
 }
