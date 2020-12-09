@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<options>
+  <DataAccessOptions>
+    <StoredProcedure>GetShippingData</StoredProcedure>
+    <ConnectionString>Data Source =.\SQLEXPRESS;Initial Catalog = Northwind;Integrated Security = True</ConnectionString>
+  </DataAccessOptions>
+  <PathOptions>
+    <XmlFileName>order</XmlFileName>
+    <XsdFileName>orderSchema</XsdFileName>
+    <SourcePath>C:\SourceDirectory</SourcePath>
+  </PathOptions>
+  <ServiceOptions>
+    <CanStop>true</CanStop>
+    <CanPauseAndContinue>true</CanPauseAndContinue>
+    <AutoLog>true</AutoLog>
+  </ServiceOptions>
+</options>
