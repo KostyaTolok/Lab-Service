@@ -27,9 +27,11 @@ DataAccess содержит в себе класс ShippingContext, посред
      }
 ```
 Метод взаимодействует с базой с помощью хранимой процедуры
-![Alt-text]("Screenshots/Screenshot 2020-12-09 230659".jpg "Хранимая процедура")
+![Alt-text](Screenshots/Screenshot 2020-12-09 230659.jpg "Хранимая процедура")
+
 Таблица в базе данных
 ![Alt-text](Screenshots/zDszA1CsU7k.jpg "Таблица")
+
 Далее данные конвертируются в IEnumerable и помещаются в репозиторий. ShippingContext использует модель Order из проекта Models папки DataBaseModels.
 Репозиторий находится в UnitOfWork посредством которого ServiceLayer взаимодействует с DataAccess.
 ## ServiceLayer
