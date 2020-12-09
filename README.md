@@ -8,7 +8,8 @@ FileManager и конфигурацию к нему(проект ConfigurationMa
 Также дополнительно разработаем слой для работы с базой данных для логгирования.
 ## DataAccess
 ____
-DataAccess содержит в себе класс ShippingContext, посредством которого заполняются репозитории заказов OrdersRepository
+DataAccess содержит в себе класс ShippingContext, посредством которого заполняются репозитории заказов OrdersRepository.
+
 *Метод ReadData ShippingContext*
 ```C#
      public void ReadData()      //Считывание данных из базы данных
@@ -26,14 +27,15 @@ DataAccess содержит в себе класс ShippingContext, посред
      }
 ```
 Метод взаимодействует с базой с помощью хранимой процедуры
-![Alt-text](Screenshots/Screenshot 2020-12-09 230659)
+![Alt-text]("Screenshots/Screenshot 2020-12-09 230659".jpg "Хранимая процедура")
 Таблица в базе данных
-![Alt-text](Screenshots/zDszA1CsU7k)
+![Alt-text](Screenshots/zDszA1CsU7k.jpg "Таблица")
 Далее данные конвертируются в IEnumerable и помещаются в репозиторий. ShippingContext использует модель Order из проекта Models папки DataBaseModels.
 Репозиторий находится в UnitOfWork посредством которого ServiceLayer взаимодействует с DataAccess.
 ## ServiceLayer
 ServiceLayer содержит в себе логику преобразования Order в OrderDTO(Data transfer object), он преобразует несколько заказов один, вычисляя общую
 стоимость заказа, и собирая все имена продуктов в один список, получая единый объект заказа OrderDTO.
+
 *Метод перевода нескольких заказов в один*
 ```C#
         private OrderDTO ConvertOrderToOrderDTO(IEnumerable<Order> orders)  
