@@ -122,6 +122,7 @@ ____
             insights.InsertInsight("Заказы были записаны в xml файл и помещены в папку source");
         }
 ```
+В конце концов файлы попадают в папку Source, где уже начинает работать ранее написанная служба FileManager.
 ## ApplicationInsights
 ____
 [ApplicationInsights](ApplicationInsights/ApplicationInsights.cs) записывает события и исключения программы в специально созданную базу данных.
