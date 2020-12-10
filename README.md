@@ -150,5 +150,6 @@ Cоответствующий [метод](https://github.com/KostyaTolok/Lab-Se
 
 ![Alt-text](Screenshots/5.jpg "Процедура")
 
-Используя метод [ClearInsights](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ApplicationInsights/ApplicationInsights.cs#L70)
+Используя метод [ClearInsights](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ApplicationInsights/ApplicationInsights.cs#L70).
 
+На этом все, спасибо за внимание! :cat:
