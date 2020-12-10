@@ -27,9 +27,11 @@ DataAccess содержит в себе класс [ShippingContext](DataAccess/
      }
 ```
 Метод взаимодействует с базой с помощью хранимой процедуры
+
 ![Alt-text](Screenshots/1.jpg "Хранимая процедура")
 
 Таблица в базе данных
+
 ![Alt-text](Screenshots/zDszA1CsU7k.jpg "Таблица")
 
 Далее данные конвертируются в IEnumerable и помещаются в репозиторий. ShippingContext использует модель [Order](Models/DataBaseModels/Order.cs) из проекта Models папки DataBaseModels.
@@ -125,14 +127,17 @@ ____
 [ApplicationInsights](ApplicationInsights/ApplicationInsights.cs) записывает события и исключения программы в специально созданную базу данных.
 
 ![Alt-text](Screenshots/2.jpg "Таблица")
+
 Для этого она использует хранимую процедуру InsertInsight.
 
 ![Alt-text](Screenshots/3.jpg "Процедура")
 
 И метод [InsertInsight](https://github.com/KostyaTolok/Lab-Service/blob/5454049dcd791103b76ca1e851243e3a2762da86/ApplicationInsights/ApplicationInsights.cs#L20).
+
 Также AppInsights может записать все события и исключения в xml файл используя хранимую процедуру.
 
 ![Alt-text](Screenshots/4.jpg "Процедура")
+
 Cоответствующий [метод](https://github.com/KostyaTolok/Lab-Service/blob/5454049dcd791103b76ca1e851243e3a2762da86/ApplicationInsights/ApplicationInsights.cs#L45).
 
 А также очистить базу данных
