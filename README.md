@@ -8,7 +8,7 @@ FileManager и конфигурацию к нему(проект ConfigurationMa
 Также дополнительно разработаем слой для работы с базой данных для логгирования.
 ## DataAccess
 ____
-DataAccess содержит в себе класс ShippingContext, посредством которого заполняются репозитории заказов OrdersRepository.
+DataAccess содержит в себе класс [ShippingContext](DataAccess/ShippingContext.cs), посредством которого заполняются репозитории заказов [OrdersRepository](DataAccess/Repositories/OrdersRepository.cs).
 
 *Метод ReadData ShippingContext*
 ```C#
@@ -33,10 +33,10 @@ DataAccess содержит в себе класс ShippingContext, посред
 ![Alt-text](Screenshots/zDszA1CsU7k.jpg "Таблица")
 
 Далее данные конвертируются в IEnumerable и помещаются в репозиторий. ShippingContext использует модель [Order](Models/DataBaseModels/Order.cs) из проекта Models папки DataBaseModels.
-Репозиторий находится в UnitOfWork посредством которого ServiceLayer взаимодействует с DataAccess.
+Репозиторий находится в [UnitOfWork](DataAccess/Repositories/UnitOfWork.cs) посредством которого ServiceLayer взаимодействует с DataAccess.
 ## ServiceLayer
 ____
-ServiceLayer содержит в себе логику преобразования [Order](Models/DataBaseModels/Order.cs) в [OrderDTO](Models/DTOModels/OrderDTO.cs)(Data transfer object), он преобразует несколько заказов один, вычисляя общую
+[ServiceLayer](Lab-Service/ServiceLayer) содержит в себе класс [OrderService](ServiceLayer/Services/OrderSevice.cs), который содержит логику преобразования [Order](Models/DataBaseModels/Order.cs) в [OrderDTO](Models/DTOModels/OrderDTO.cs)(Data transfer object), он преобразует несколько заказов один, вычисляя общую
 стоимость заказа, и собирая все имена продуктов в один список, получая единый объект заказа OrderDTO.
 
 *Метод перевода нескольких заказов в один*
@@ -73,10 +73,10 @@ ServiceLayer содержит в себе логику преобразован�
             };
         }
 ```
-Методы GetOrder и GetOrders возвращают либо один OrderDTO, либо перечисление OrderDTO. Далее данные передаются на уровень DataManager в XmlGenerator.
+Методы [GetOrder](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L21) и [GetOrders](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L65) возвращают либо один OrderDTO, либо перечисление OrderDTO. Далее данные передаются на уровень DataManager в XmlGenerator.
 ## XmlGenerator
 ____
-Здесь данные преобразуются в xml файл, а также на их основе создается xsd схема. Для этого преобразуем данные из IEnumerable в Datatable.
+[Здесь](DataManager/XmlGenerator.cs) данные преобразуются в xml файл, а также на их основе создается xsd схема. Для этого преобразуем данные из IEnumerable в Datatable.
 
 *Метод перевода нескольких заказов в таблицу*
 ```C#
@@ -122,66 +122,22 @@ ____
 ```
 ## ApplicationInsights
 ____
-ApplicationInsights записывает события и исключения программы в специально созданную базу данных.
+[ApplicationInsights](ApplicationInsights/ApplicationInsights.cs) записывает события и исключения программы в специально созданную базу данных.
 
 ![Alt-text](Screenshots/2.jpg "Таблица")
 Для этого она использует хранимую процедуру InsertInsight.
 
 ![Alt-text](Screenshots/3.jpg "Процедура")
 
-И метод InsertInsight.
-
-```C#
-        public void InsertInsight(string message)
-        {
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand("InsertInsight", connection)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
-
-                try
-                {
-                    SqlParameter messageParam = new SqlParameter("@message", message);
-                    SqlParameter timeParam = new SqlParameter("@time", DateTime.Now);
-                    command.Parameters.AddRange(new[] { messageParam, timeParam });
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    Logger.RecordException(ex.Message);
-                }
-            }
-        }
-```
+И метод [InsertInsight](https://github.com/KostyaTolok/Lab-Service/blob/5454049dcd791103b76ca1e851243e3a2762da86/ApplicationInsights/ApplicationInsights.cs#L20).
 Также AppInsights может записать все события и исключения в xml файл используя хранимую процедуру.
 
 ![Alt-text](Screenshots/4.jpg "Процедура")
-И соответствующий [метод](https://github.com/KostyaTolok/Lab-Service/blob/5454049dcd791103b76ca1e851243e3a2762da86/ApplicationInsights/ApplicationInsights.cs#L45).
-```C#
-        public void WriteInsightsToXml()
-        {
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand("GetInsights", connection)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
+Cоответствующий [метод](https://github.com/KostyaTolok/Lab-Service/blob/5454049dcd791103b76ca1e851243e3a2762da86/ApplicationInsights/ApplicationInsights.cs#L45).
 
-                try
-                {
-                    DataSet dataSet = new DataSet();
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    adapter.Fill(dataSet);
-                    dataSet.Tables[0].WriteXml(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationInsights.xml"));
-                }
-                catch (Exception ex)
-                {
-                    Logger.RecordException(ex.Message);
-                }
-            }
-        }
-```
+А также очистить базу данных
+
+![Alt-text](Screenshots/5.jpg "Процедура")
+
+Используя метод [ClearInsights](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ApplicationInsights/ApplicationInsights.cs#L70)
+
