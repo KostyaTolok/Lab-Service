@@ -27,7 +27,7 @@ DataAccess содержит в себе класс ShippingContext, посред
      }
 ```
 Метод взаимодействует с базой с помощью хранимой процедуры
-![Alt-text](Screenshots/Screenshot 2020-12-09 230823.jpg "Хранимая процедура")
+![Alt-text](Screenshots/1.jpg "Хранимая процедура")
 
 Таблица в базе данных
 ![Alt-text](Screenshots/zDszA1CsU7k.jpg "Таблица")
