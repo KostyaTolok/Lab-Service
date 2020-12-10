@@ -32,10 +32,11 @@ DataAccess содержит в себе класс ShippingContext, посред
 Таблица в базе данных
 ![Alt-text](Screenshots/zDszA1CsU7k.jpg "Таблица")
 
-Далее данные конвертируются в IEnumerable и помещаются в репозиторий. ShippingContext использует модель Order из проекта Models папки DataBaseModels.
+Далее данные конвертируются в IEnumerable и помещаются в репозиторий. ShippingContext использует модель [Order](Models/DataBaseModels/Order.cs) из проекта Models папки DataBaseModels.
 Репозиторий находится в UnitOfWork посредством которого ServiceLayer взаимодействует с DataAccess.
 ## ServiceLayer
-ServiceLayer содержит в себе логику преобразования Order в OrderDTO(Data transfer object), он преобразует несколько заказов один, вычисляя общую
+____
+ServiceLayer содержит в себе логику преобразования [Order](Models/DataBaseModels/Order.cs) в [OrderDTO](Models/DTOModels/OrderDTO.cs)(Data transfer object), он преобразует несколько заказов один, вычисляя общую
 стоимость заказа, и собирая все имена продуктов в один список, получая единый объект заказа OrderDTO.
 
 *Метод перевода нескольких заказов в один*
@@ -70,5 +71,117 @@ ServiceLayer содержит в себе логику преобразован�
                 ProductNames = names,
                 RequiredDate = firstOrder.RequiredDate
             };
+        }
+```
+Методы GetOrder и GetOrders возвращают либо один OrderDTO, либо перечисление OrderDTO. Далее данные передаются на уровень DataManager в XmlGenerator.
+## XmlGenerator
+____
+Здесь данные преобразуются в xml файл, а также на их основе создается xsd схема. Для этого преобразуем данные из IEnumerable в Datatable.
+
+*Метод перевода нескольких заказов в таблицу*
+```C#
+        private DataTable OrdersDTOToDataTable(IEnumerable<OrderDTO> orders)
+        {
+            DataTable table = new DataTable(typeof(OrderDTO).Name);
+
+            PropertyInfo[] props = typeof(OrderDTO).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (PropertyInfo prop in props)
+            {
+                table.Columns.Add(prop.Name, prop.PropertyType);
+            }
+
+            foreach (OrderDTO order in orders)
+            {
+                var values = new object[props.Length];
+                for (int i = 0; i < props.Length; i++)
+                {
+                    values[i] = props[i].GetValue(order, null);
+                }
+
+                table.Rows.Add(values);
+            }
+
+            return table;
+        }
+```
+А после на основе сформируем xml и xsd файлы.
+
+*Метод метод генерации xml и xsd файлов*
+```C#
+        private void ConvertOrdersToXml()
+        {
+            IEnumerable<OrderDTO> orderDTOs = orderService.GetOrders();
+            DataTable dataTable = OrdersDTOToDataTable(orderDTOs);
+
+            dataTable.WriteXml(Path.Combine(options.PathOptions.SourcePath, options.PathOptions.XmlFileName + ".xml"));
+            dataTable.WriteXmlSchema(Path.Combine(options.PathOptions.SourcePath, options.PathOptions.XsdFileName + ".xsd"));
+
+            insights.InsertInsight("Заказы были записаны в xml файл и помещены в папку source");
+        }
+```
+## ApplicationInsights
+____
+ApplicationInsights записывает события и исключения программы в специально созданную базу данных.
+
+![Alt-text](Screenshots/2.jpg "Таблица")
+Для этого она использует хранимую процедуру InsertInsight.
+
+![Alt-text](Screenshots/3.jpg "Процедура")
+
+И метод InsertInsight.
+
+```C#
+        public void InsertInsight(string message)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("InsertInsight", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                try
+                {
+                    SqlParameter messageParam = new SqlParameter("@message", message);
+                    SqlParameter timeParam = new SqlParameter("@time", DateTime.Now);
+                    command.Parameters.AddRange(new[] { messageParam, timeParam });
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Logger.RecordException(ex.Message);
+                }
+            }
+        }
+```
+Также AppInsights может записать все события и исключения в xml файл используя хранимую процедуру.
+
+![Alt-text](Screenshots/4.jpg "Процедура")
+И соответствующий [метод](https://github.com/KostyaTolok/Lab-Service/blob/5454049dcd791103b76ca1e851243e3a2762da86/ApplicationInsights/ApplicationInsights.cs#L45).
+```C#
+        public void WriteInsightsToXml()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("GetInsights", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                try
+                {
+                    DataSet dataSet = new DataSet();
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    adapter.Fill(dataSet);
+                    dataSet.Tables[0].WriteXml(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationInsights.xml"));
+                }
+                catch (Exception ex)
+                {
+                    Logger.RecordException(ex.Message);
+                }
+            }
         }
 ```
