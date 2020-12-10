@@ -8,7 +8,7 @@ FileManager и конфигурацию к нему(проект ConfigurationMa
 Также дополнительно разработаем слой для работы с базой данных для логгирования.
 *Схема*
 
-![Alt-text](Screenshots/Lab4.jpg "Хранимая процедура")
+![Alt-text](Screenshots/Lab4.png "Хранимая процедура")
 
 ## DataAccess
 ____
