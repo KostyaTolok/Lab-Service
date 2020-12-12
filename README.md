@@ -83,38 +83,9 @@ ____
 Методы [GetOrder](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L21) и [GetOrders](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L65) возвращают либо один OrderDTO, либо перечисление OrderDTO. Далее данные передаются на уровень DataManager в XmlGenerator.
 ## XmlGenerator
 ____
-[Здесь](DataManager/XmlGenerator.cs) данные преобразуются в xml файл, а также на их основе создается xsd схема. Для этого преобразуем данные из IEnumerable в Datatable.
+[Здесь](DataManager/XmlGenerator.cs) данные преобразуются в xml файл, а также на их основе создается xsd схема. Для этого [преобразуем](https://github.com/KostyaTolok/Lab-Service/blob/0f775a17c779a43b44dda0cc6b94d042c55455e2/DataManager/XmlGenerator.cs#L68) данные из IEnumerable в Datatable. А после на основе сформируем xml и xsd файлы.
 
-*Метод перевода нескольких заказов в таблицу*
-```C#
-        private DataTable OrdersDTOToDataTable(IEnumerable<OrderDTO> orders)
-        {
-            DataTable table = new DataTable(typeof(OrderDTO).Name);
-
-            PropertyInfo[] props = typeof(OrderDTO).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            foreach (PropertyInfo prop in props)
-            {
-                table.Columns.Add(prop.Name, prop.PropertyType);
-            }
-
-            foreach (OrderDTO order in orders)
-            {
-                var values = new object[props.Length];
-                for (int i = 0; i < props.Length; i++)
-                {
-                    values[i] = props[i].GetValue(order, null);
-                }
-
-                table.Rows.Add(values);
-            }
-
-            return table;
-        }
-```
-А после на основе сформируем xml и xsd файлы.
-
-*Метод метод генерации xml и xsd файлов*
+*Метод метод генерации xml и xsd файлов на основе всех заказов*
 ```C#
         private void ConvertOrdersToXml()
         {
@@ -125,6 +96,21 @@ ____
             dataTable.WriteXmlSchema(Path.Combine(options.PathOptions.SourcePath, options.PathOptions.XsdFileName + ".xsd"));
 
             insights.InsertInsight("Заказы были записаны в xml файл и помещены в папку source");
+        }
+```
+
+*Метод генерации xml и xsd файлов на основе одного заказа*
+```C#
+        private void ConvertOrderToXml(int id)
+        {
+            OrderDTO orderDTO = orderService.GetOrder(id);
+            List<OrderDTO> orderDTOs = new List<OrderDTO>() { orderDTO };
+            DataTable dataTable = OrdersDTOToDataTable(orderDTOs);
+
+            dataTable.WriteXml(Path.Combine(options.PathOptions.SourcePath, options.PathOptions.XmlFileName + ".xml"));
+            dataTable.WriteXmlSchema(Path.Combine(options.PathOptions.SourcePath, options.PathOptions.XsdFileName + ".xsd"));
+
+            insights.InsertInsight("Заказ был записан в xml файл и помещен в папку source");
         }
 ```
 В конце концов файлы попадают в папку Source, где уже начинает работать ранее написанная служба FileManager.
