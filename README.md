@@ -2,9 +2,9 @@
 ____
 ## Вступление
 Проект представляет собой 8 проектов, связанных между друг другом. Двумя главными проектами являются Windows-службы(DataManager и FileManager).
-FileManager и конфигурацию к нему(проект ConfigurationManager) мы разработали в прошлых лабораторных работах. Теперь настало время получения данных из базы данных
-и записи событий и исключений службы в отдельную базу данных. Для этого разработаем службу DataManager, слой DataAccess для работы с базой данных, слой ServiceLayer,
-в котором будет описана логика работы с данными полученными из базы данных, а также XmlGenerator, который будет генерировать xml файл и xsd схему на основе полученных данных.
+[FileManager](FileManager/) и конфигурацию к нему(проект [ConfigurationManager](ConfigurationManager/)) мы разработали в прошлых лабораторных работах. Теперь настало время получения данных из базы данных
+и записи событий и исключений службы в отдельную базу данных. Для этого разработаем службу [DataManager](DataManager/), слой [DataAccess](DataAccess/) для работы с базой данных, слой [ServiceLayer](ServiceLayer/),
+в котором будет описана логика работы с данными полученными из базы данных, а также [XmlGenerator](DataManager/XmlGenerator.cs), который будет генерировать xml файл и xsd схему на основе полученных данных.
 Также дополнительно разработаем слой для работы с базой данных для логгирования.
 
 *Схема*
@@ -13,7 +13,7 @@ FileManager и конфигурацию к нему(проект ConfigurationMa
 
 ## DataAccess
 ____
-DataAccess содержит в себе класс [ShippingContext](DataAccess/ShippingContext.cs), посредством которого заполняются репозитории заказов [OrdersRepository](DataAccess/Repositories/OrdersRepository.cs).
+[DataAccess](DataAccess/) содержит в себе класс [ShippingContext](DataAccess/ShippingContext.cs), посредством которого заполняются репозитории заказов [OrdersRepository](DataAccess/Repositories/OrdersRepository.cs).
 
 *Метод ReadData ShippingContext*
 ```C#
@@ -40,7 +40,7 @@ DataAccess содержит в себе класс [ShippingContext](DataAccess/
 ![Alt-text](Screenshots/zDszA1CsU7k.jpg "Таблица")
 
 Далее данные [конвертируются](https://github.com/KostyaTolok/Lab-Service/blob/267bcc3d1866fd393f722d729104c6579a54b4bf/DataAccess/ShippingContext.cs#L39) в IEnumerable и помещаются в репозиторий. ShippingContext использует модель [Order](Models/DataBaseModels/Order.cs) из проекта Models папки DataBaseModels.
-Репозиторий находится в [UnitOfWork](DataAccess/Repositories/UnitOfWork.cs) посредством которого [ServiceLayer](Lab-Service/ServiceLayer) взаимодействует с [DataAccess](Lab-Service/DataAccess).
+Репозиторий находится в [UnitOfWork](DataAccess/Repositories/UnitOfWork.cs) посредством которого [ServiceLayer](ServiceLayer/) взаимодействует с [DataAccess](DataAccess/).
 ## ServiceLayer
 ____
 [ServiceLayer](ServiceLayer/) содержит в себе класс [OrderService](ServiceLayer/Services/OrderSevice.cs), который содержит логику преобразования [Order](Models/DataBaseModels/Order.cs) в [OrderDTO](Models/DTOModels/OrderDTO.cs)(Data transfer object), он преобразует несколько заказов один, вычисляя общую
@@ -80,7 +80,7 @@ ____
             };
         }
 ```
-Методы [GetOrder](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L21) и [GetOrders](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L65) возвращают либо один [OrderDTO](Models/DTOModels/OrderDTO.cs), либо перечисление [OrderDTO](Models/DTOModels/OrderDTO.cs). Далее данные передаются на уровень [DataManager](Lab-Service/DataManager) в [XmlGenerator](DataManager/XmlGenerator.cs).
+Методы [GetOrder](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L21) и [GetOrders](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L65) возвращают либо один [OrderDTO](Models/DTOModels/OrderDTO.cs), либо перечисление [OrderDTO](Models/DTOModels/OrderDTO.cs). Далее данные передаются на уровень [DataManager](DataManager/) в [XmlGenerator](DataManager/XmlGenerator.cs).
 ## XmlGenerator
 ____
 [Здесь](DataManager/XmlGenerator.cs) данные преобразуются в xml файл, а также на их основе создается xsd схема. Для этого [преобразуем](https://github.com/KostyaTolok/Lab-Service/blob/0f775a17c779a43b44dda0cc6b94d042c55455e2/DataManager/XmlGenerator.cs#L68) данные из IEnumerable в Datatable. А после на основе сформируем xml и xsd файлы.
@@ -113,7 +113,7 @@ ____
             insights.InsertInsight("Заказ был записан в xml файл и помещен в папку source");
         }
 ```
-В конце концов файлы попадают в папку Source, где уже начинает работать ранее написанная служба [FileManager](Lab-Service/FileManager).
+В конце концов файлы попадают в папку Source, где уже начинает работать ранее написанная служба [FileManager](FileManager/).
 ## ApplicationInsights
 ____
 [ApplicationInsights](ApplicationInsights/ApplicationInsights.cs) записывает события и исключения программы в специально созданную базу данных.
