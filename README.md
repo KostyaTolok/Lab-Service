@@ -9,7 +9,7 @@ FileManager и конфигурацию к нему(проект ConfigurationMa
 
 *Схема*
 
-![Alt-text](Screenshots/Lab4.png "Хранимая процедура")
+![Alt-text](Screenshots/Lab4.png "Схема")
 
 ## DataAccess
 ____
@@ -39,12 +39,12 @@ DataAccess содержит в себе класс [ShippingContext](DataAccess/
 
 ![Alt-text](Screenshots/zDszA1CsU7k.jpg "Таблица")
 
-Далее данные конвертируются в IEnumerable и помещаются в репозиторий. ShippingContext использует модель [Order](Models/DataBaseModels/Order.cs) из проекта Models папки DataBaseModels.
-Репозиторий находится в [UnitOfWork](DataAccess/Repositories/UnitOfWork.cs) посредством которого ServiceLayer взаимодействует с DataAccess.
+Далее данные [конвертируются](https://github.com/KostyaTolok/Lab-Service/blob/267bcc3d1866fd393f722d729104c6579a54b4bf/DataAccess/ShippingContext.cs#L39) в IEnumerable и помещаются в репозиторий. ShippingContext использует модель [Order](Models/DataBaseModels/Order.cs) из проекта Models папки DataBaseModels.
+Репозиторий находится в [UnitOfWork](DataAccess/Repositories/UnitOfWork.cs) посредством которого [ServiceLayer](Lab-Service/ServiceLayer) взаимодействует с [DataAccess](Lab-Service/DataAccess).
 ## ServiceLayer
 ____
 [ServiceLayer](Lab-Service/ServiceLayer) содержит в себе класс [OrderService](ServiceLayer/Services/OrderSevice.cs), который содержит логику преобразования [Order](Models/DataBaseModels/Order.cs) в [OrderDTO](Models/DTOModels/OrderDTO.cs)(Data transfer object), он преобразует несколько заказов один, вычисляя общую
-стоимость заказа, и собирая все имена продуктов в один список, получая единый объект заказа OrderDTO.
+стоимость заказа, и собирая все имена продуктов в один список, получая единый объект заказа [OrderDTO](Models/DTOModels/OrderDTO.cs).
 
 *Метод перевода нескольких заказов в один*
 ```C#
@@ -80,7 +80,7 @@ ____
             };
         }
 ```
-Методы [GetOrder](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L21) и [GetOrders](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L65) возвращают либо один OrderDTO, либо перечисление OrderDTO. Далее данные передаются на уровень DataManager в XmlGenerator.
+Методы [GetOrder](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L21) и [GetOrders](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L65) возвращают либо один [OrderDTO](Models/DTOModels/OrderDTO.cs), либо перечисление [OrderDTO](Models/DTOModels/OrderDTO.cs). Далее данные передаются на уровень [DataManager](Lab-Service/DataManager) в [XmlGenerator](DataManager/XmlGenerator.cs).
 ## XmlGenerator
 ____
 [Здесь](DataManager/XmlGenerator.cs) данные преобразуются в xml файл, а также на их основе создается xsd схема. Для этого [преобразуем](https://github.com/KostyaTolok/Lab-Service/blob/0f775a17c779a43b44dda0cc6b94d042c55455e2/DataManager/XmlGenerator.cs#L68) данные из IEnumerable в Datatable. А после на основе сформируем xml и xsd файлы.
@@ -113,7 +113,7 @@ ____
             insights.InsertInsight("Заказ был записан в xml файл и помещен в папку source");
         }
 ```
-В конце концов файлы попадают в папку Source, где уже начинает работать ранее написанная служба FileManager.
+В конце концов файлы попадают в папку Source, где уже начинает работать ранее написанная служба [FileManager](Lab-Service/FileManager).
 ## ApplicationInsights
 ____
 [ApplicationInsights](ApplicationInsights/ApplicationInsights.cs) записывает события и исключения программы в специально созданную базу данных.
