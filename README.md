@@ -83,6 +83,7 @@ ____
 Методы [GetOrder](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L21) и [GetOrders](https://github.com/KostyaTolok/Lab-Service/blob/5c5bb9fa36153d64b7ab0b2b03dc4113e12ba9f3/ServiceLayer/Services/OrderSevice.cs#L65) возвращают либо один [OrderDTO](Models/DTOModels/OrderDTO.cs), либо перечисление [OrderDTO](Models/DTOModels/OrderDTO.cs). Далее данные передаются на уровень [DataManager](DataManager/) в [XmlGenerator](DataManager/XmlGenerator.cs).
 ## XmlGenerator
 ____
+[DataManager](DataManager/XmlGeneratorService.cs) написан в виде Windows-службы, которая использует ранее написанный [ConfigurationManager](ConfigurationManager/) для задания настроек, а также новые [модели настроек](DataManagerOptions/).
 [Здесь](DataManager/XmlGenerator.cs) данные преобразуются в xml файл, а также на их основе создается xsd схема. Для этого [преобразуем](https://github.com/KostyaTolok/Lab-Service/blob/0f775a17c779a43b44dda0cc6b94d042c55455e2/DataManager/XmlGenerator.cs#L68) данные из IEnumerable в Datatable. А после на основе сформируем xml и xsd файлы.
 
 *Метод метод генерации xml и xsd файлов на основе всех заказов*
