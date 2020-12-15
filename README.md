@@ -43,7 +43,7 @@ DataAccess содержит в себе класс [ShippingContext](DataAccess/
 Репозиторий находится в [UnitOfWork](DataAccess/Repositories/UnitOfWork.cs) посредством которого [ServiceLayer](Lab-Service/ServiceLayer) взаимодействует с [DataAccess](Lab-Service/DataAccess).
 ## ServiceLayer
 ____
-[ServiceLayer](Lab-Service/ServiceLayer) содержит в себе класс [OrderService](ServiceLayer/Services/OrderSevice.cs), который содержит логику преобразования [Order](Models/DataBaseModels/Order.cs) в [OrderDTO](Models/DTOModels/OrderDTO.cs)(Data transfer object), он преобразует несколько заказов один, вычисляя общую
+[ServiceLayer](ServiceLayer/) содержит в себе класс [OrderService](ServiceLayer/Services/OrderSevice.cs), который содержит логику преобразования [Order](Models/DataBaseModels/Order.cs) в [OrderDTO](Models/DTOModels/OrderDTO.cs)(Data transfer object), он преобразует несколько заказов один, вычисляя общую
 стоимость заказа, и собирая все имена продуктов в один список, получая единый объект заказа [OrderDTO](Models/DTOModels/OrderDTO.cs).
 
 *Метод перевода нескольких заказов в один*
