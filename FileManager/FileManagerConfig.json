@@ -1,0 +1,11 @@
+{
+  "CompressionLevel": "Fastest",
+  "ClientDirectoryName": "Json",
+  "FileName": "file",
+  "ArchiveName": "ARC",
+  "SourcePath": "C:\\SourceDirectory",
+  "TargetPath":  "C:\\TargetDirectory",
+  "CanStop": true,
+  "CanPauseAndContinue": true,
+  "AutoLog": true
+}

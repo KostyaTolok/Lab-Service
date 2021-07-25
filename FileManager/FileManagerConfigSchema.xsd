@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<xs:schema id="configValidation"
+    attributeFormDefault="unqualified"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/configValidation.xsd"
+    xmlns:mstns="http://tempuri.org/configValidation.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="options">
+    <xs:complexType>
+      <xs:sequence maxOccurs="1" minOccurs="1">
+        <xs:element name="ArchiveOptions" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence maxOccurs="1" minOccurs="1">
+              <xs:element name="CompressionLevel" default="Fastest"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PathOptions" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence maxOccurs="1" minOccurs="1">
+              <xs:element name="ClientDirectoryName" default="ClientDirectory" />
+              <xs:element name="FileName" default="Sales"/>
+              <xs:element name="ArchiveName" default="archive"/>
+              <xs:element name="SourcePath"/>
+              <xs:element name="TargetPath"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ServiceOptions" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence maxOccurs="1" minOccurs="1">
+              <xs:element name="CanStop" type="xs:boolean"/>
+              <xs:element name="CanPauseAndContinue" type="xs:boolean"/>
+              <xs:element name="AutoLog" type="xs:boolean"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
